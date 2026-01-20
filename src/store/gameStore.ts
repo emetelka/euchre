@@ -174,7 +174,10 @@ export const useGameStore = create<GameStore>()(
 
           state.game.currentPlayer = state.game.bidding.currentBidder;
         } else if (action.type === 'order_up') {
+          console.log('[processBid] order_up - currentBidder before:', bidding.currentBidder);
           state.game.bidding = processOrderUp(bidding);
+          console.log('[processBid] order_up - maker after:', state.game.bidding.maker);
+          console.log('[processBid] order_up - trump after:', state.game.bidding.trump);
 
           // Dealer picks up the turned-up card
           if (state.game.hand) {
@@ -226,10 +229,18 @@ export const useGameStore = create<GameStore>()(
           state.game.currentPlayer = state.game.bidding.maker!;
         } else if (action.type === 'go_alone') {
           console.log('[processBid] go_alone branch entered');
+          console.log('[processBid] go_alone - current phase:', state.game.phase);
+          console.log('[processBid] go_alone - bidding state:', JSON.stringify({
+            maker: state.game.bidding.maker,
+            trump: state.game.bidding.trump,
+            currentBidder: state.game.bidding.currentBidder,
+            dealer: state.game.bidding.dealer
+          }));
           // Directly set goingAlone flags instead of calling processGoAlone
           // Trump and maker are already set when we reach GO_ALONE_DECISION phase
           if (!state.game.bidding.maker) {
             console.error('[processBid] go_alone - maker is null! Returning early.');
+            console.error('[processBid] go_alone - This means order_up or pick_suit did not set maker correctly');
             return;
           }
 
