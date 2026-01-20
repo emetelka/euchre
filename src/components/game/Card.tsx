@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import type { Transition } from 'framer-motion';
 import type { Card as CardType } from '../../engine/types';
@@ -25,16 +25,6 @@ const CardComponent: React.FC<CardProps> = ({
   layoutId,
   transition,
 }) => {
-  const [shake, setShake] = useState(false);
-
-  // Trigger shake animation when user tries to click a disabled card
-  useEffect(() => {
-    if (disabled && onClick) {
-      setShake(true);
-      const timer = setTimeout(() => setShake(false), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [disabled, onClick]);
   const sizeClasses = {
     small: 'w-10 h-14 sm:w-12 sm:h-16 md:w-14 md:h-20',
     medium: 'w-14 h-20 sm:w-[72px] sm:h-[100px] md:w-20 md:h-28',
@@ -82,19 +72,17 @@ const CardComponent: React.FC<CardProps> = ({
       layout
       layoutId={layoutId}
       initial={{ opacity: 0, scale: 0.8 }}
-      animate={
-        shake
-          ? { x: [-3, 3, -3, 3, 0], opacity: 1, scale: 1 }
-          : { opacity: 1, scale: 1, x: 0 }
-      }
+      animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.5 }}
-      transition={shake ? { duration: 0.2 } : transition}
+      transition={transition}
       onClick={handleClick}
-      className={`${sizeClasses[size]} ${className} bg-white border-2 rounded-lg shadow-lg flex flex-col items-center justify-center gap-1 ${
-        !disabled && onClick ? 'cursor-pointer hover:scale-105 hover:shadow-xl border-gray-300' : 'cursor-not-allowed border-gray-400'
-      } ${disabled ? 'opacity-30 grayscale' : ''}`}
+      className={`${sizeClasses[size]} ${className} border-2 rounded-lg shadow-lg flex flex-col items-center justify-center gap-1 ${
+        !disabled && onClick
+          ? 'bg-white cursor-pointer hover:scale-105 hover:shadow-xl border-gray-300'
+          : 'bg-gray-300 cursor-not-allowed border-gray-400 opacity-60'
+      }`}
       style={{
-        color: suitColor,
+        color: disabled ? '#6b7280' : suitColor,
       }}
       whileHover={!disabled && onClick ? { scale: 1.05 } : undefined}
     >
