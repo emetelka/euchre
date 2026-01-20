@@ -201,14 +201,18 @@ export const GameBoard: React.FC = () => {
   };
 
   const handleGoAlone = () => {
+    console.log('[handleGoAlone] Button clicked - calling processBid with go_alone');
     processBid({ type: 'go_alone' });
+    console.log('[handleGoAlone] processBid called, waiting 100ms before advancePhase');
     // Delay to ensure state updates are applied before advancing
     setTimeout(() => {
+      console.log('[handleGoAlone] Calling advancePhase');
       advancePhase();
     }, 100);
   };
 
   const handleDeclineAlone = () => {
+    console.log('[handleDeclineAlone] Button clicked');
     // Move to TRUMP_SELECTED without going alone
     setTimeout(() => {
       advancePhase();

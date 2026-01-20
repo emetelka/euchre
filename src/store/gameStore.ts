@@ -159,6 +159,7 @@ export const useGameStore = create<GameStore>()(
 
     processBid: (action: BidAction) =>
       set((state) => {
+        console.log(`[processBid] Action received: ${action.type}`);
         if (!state.game || !state.game.bidding) return;
 
         const bidding = state.game.bidding;
@@ -224,10 +225,15 @@ export const useGameStore = create<GameStore>()(
           state.game.phase = 'GO_ALONE_DECISION';
           state.game.currentPlayer = state.game.bidding.maker!;
         } else if (action.type === 'go_alone') {
+          console.log('[processBid] go_alone branch entered');
           // Directly set goingAlone flags instead of calling processGoAlone
           // Trump and maker are already set when we reach GO_ALONE_DECISION phase
-          if (!state.game.bidding.maker) return;
+          if (!state.game.bidding.maker) {
+            console.error('[processBid] go_alone - maker is null! Returning early.');
+            return;
+          }
 
+          console.log(`[processBid] Setting goingAlone flags - maker: ${state.game.bidding.maker}`);
           state.game.bidding.goingAlone = true;
           state.game.bidding.alonePlayer = state.game.bidding.maker;
 
@@ -236,6 +242,8 @@ export const useGameStore = create<GameStore>()(
             state.game.hand.alonePlayer = state.game.bidding.maker;
             const partnerPosition = ((state.game.bidding.maker + 2) % 4) as Position;
             console.log(`[Go Alone] Player ${state.game.bidding.maker} (${state.game.players[state.game.bidding.maker].name}) going alone! Partner ${partnerPosition} (${state.game.players[partnerPosition].name}) will sit out.`);
+          } else {
+            console.error('[processBid] go_alone - state.game.hand is null!');
           }
         }
 
