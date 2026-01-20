@@ -21,7 +21,7 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const sizeClasses = {
     small: 'w-10 h-14 sm:w-12 sm:h-16 md:w-14 md:h-20',
-    medium: 'w-16 h-[88px] sm:w-[72px] sm:h-[100px] md:w-20 md:h-28',
+    medium: 'w-14 h-20 sm:w-[72px] sm:h-[100px] md:w-20 md:h-28',
     large: 'w-20 h-28 sm:w-[88px] sm:h-32 md:w-24 md:h-36',
   };
 

@@ -25,13 +25,13 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   const getHandClasses = () => {
     switch (position) {
       case 'south':
-        return 'flex flex-row gap-2 justify-center';
+        return 'flex flex-row gap-1 sm:gap-2 justify-center';
       case 'north':
-        return 'flex flex-row gap-2 justify-center';
+        return 'flex flex-row gap-1 sm:gap-2 justify-center';
       case 'east':
-        return 'flex flex-col gap-2 items-center';
+        return 'flex flex-col gap-1 sm:gap-2 items-center';
       case 'west':
-        return 'flex flex-col gap-2 items-center';
+        return 'flex flex-col gap-1 sm:gap-2 items-center';
     }
   };
 
