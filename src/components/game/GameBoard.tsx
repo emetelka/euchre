@@ -268,7 +268,7 @@ export const GameBoard: React.FC = () => {
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[2].name}</div>
               {game.hand && game.hand.dealer === 2 && (
-                <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+                <span className="text-yellow-400 text-sm sm:text-base" title="Dealer">⭐</span>
               )}
             </div>
             <PlayerHand cards={game.players[2].hand} position="north" faceDown />
@@ -281,7 +281,7 @@ export const GameBoard: React.FC = () => {
               <div className="flex items-center gap-1 sm:gap-2">
                 <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
                 {game.hand && game.hand.dealer === 1 && (
-                  <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+                  <span className="text-yellow-400 text-sm sm:text-base" title="Dealer">⭐</span>
                 )}
               </div>
               <PlayerHand cards={game.players[1].hand} position="west" faceDown showCountOnly />
@@ -302,7 +302,7 @@ export const GameBoard: React.FC = () => {
               <div className="flex items-center gap-1 sm:gap-2">
                 <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[3].name}</div>
                 {game.hand && game.hand.dealer === 3 && (
-                  <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+                  <span className="text-yellow-400 text-sm sm:text-base" title="Dealer">⭐</span>
                 )}
               </div>
               <PlayerHand cards={game.players[3].hand} position="east" faceDown showCountOnly />
@@ -314,7 +314,7 @@ export const GameBoard: React.FC = () => {
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[0].name}</div>
               {game.hand && game.hand.dealer === 0 && (
-                <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+                <span className="text-yellow-400 text-sm sm:text-base" title="Dealer">⭐</span>
               )}
             </div>
             <PlayerHand
@@ -408,7 +408,6 @@ export const GameBoard: React.FC = () => {
       {/* Trick winner notice */}
       {game.phase === 'TRICK_COMPLETE' && game.hand && game.hand.tricks.length > 0 && (
         <TrickWinnerNotice
-          winner={game.hand.tricks[game.hand.tricks.length - 1].winner!}
           playerName={game.players[game.hand.tricks[game.hand.tricks.length - 1].winner!].name}
         />
       )}
