@@ -257,7 +257,6 @@ export const GameBoard: React.FC = () => {
               `${game.players[1].name} & ${game.players[3].name}`,
             ]}
             trump={game.hand?.trump || null}
-            makingTeam={game.hand?.makingTeam || null}
           />
         </div>
 
