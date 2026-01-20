@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { Transition } from 'framer-motion';
 import type { Card as CardType } from '../../engine/types';
@@ -108,12 +108,6 @@ const CardComponent: React.FC<CardProps> = ({
   );
 };
 
-// Memoize the Card component to prevent unnecessary re-renders
-export const Card = memo(CardComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.card.id === nextProps.card.id &&
-    prevProps.disabled === nextProps.disabled &&
-    prevProps.faceDown === nextProps.faceDown &&
-    prevProps.layoutId === nextProps.layoutId
-  );
-});
+// Export the card component without memo for now to ensure onClick handlers work correctly
+// TODO: Consider adding memo back with proper onClick comparison if performance is an issue
+export const Card = CardComponent;
