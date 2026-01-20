@@ -276,7 +276,12 @@ export const GameBoard: React.FC = () => {
 
             {/* Play area */}
             <div>
-              {game.hand && <PlayArea cardsPlayed={game.hand.currentTrick.cardsPlayed} />}
+              {game.hand && (
+                <PlayArea
+                  cardsPlayed={game.hand.currentTrick.cardsPlayed}
+                  trump={game.hand.trump}
+                />
+              )}
             </div>
 
             {/* East player */}
