@@ -6,7 +6,6 @@ import {
   getEffectiveSuit,
   getCardPower,
 } from '../engine/gameRules';
-import { getTeam } from '../engine/types';
 
 /**
  * Counts trump cards in a hand

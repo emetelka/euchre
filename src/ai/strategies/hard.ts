@@ -3,13 +3,10 @@ import { getValidCards, isTrump, getEffectiveSuit, getCardPower } from '../../en
 import {
   evaluateHandStrength,
   shouldGoAlone,
-  countTrump,
   hasRightBower,
-  hasLeftBower,
   isPartnerWinning,
   getHighestCard,
   getLowestCard,
-  groupCardsBySuit,
 } from '../evaluator';
 import { getAvailableSuitsForPicking } from '../../engine/bidding';
 
@@ -205,7 +202,7 @@ function buildCardTracker(playedCards: Card[], trump: Suit): CardTracker {
  * Selects which card to lead (hard AI)
  */
 function selectLeadCardHard(
-  hand: Card[],
+  _hand: Card[],
   validCards: Card[],
   trump: Suit,
   currentPosition: Position,
@@ -265,8 +262,8 @@ function selectFollowCardHard(
   cardsPlayed: { position: Position; card: Card }[],
   trump: Suit,
   currentPosition: Position,
-  makingTeam: number | null,
-  tracker: CardTracker
+  _makingTeam: number | null,
+  _tracker: CardTracker
 ): Card {
   const leadCard = cardsPlayed[0].card;
   const leadSuit = getEffectiveSuit(leadCard, trump);

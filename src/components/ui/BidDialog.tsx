@@ -8,7 +8,6 @@ interface BidDialogProps {
   onOrderUp: () => void;
   onPass: () => void;
   onPickSuit: (suit: Suit) => void;
-  onGoAlone: () => void;
   availableSuits?: Suit[];
   playerHand?: CardType[];
   dealerName?: string;
@@ -19,7 +18,6 @@ export const BidDialog: React.FC<BidDialogProps> = ({
   onOrderUp,
   onPass,
   onPickSuit,
-  onGoAlone,
   availableSuits = [],
   playerHand = [],
   dealerName = '',

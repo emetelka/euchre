@@ -4,7 +4,6 @@ import { useSettingsStore } from '../../store/settingsStore';
 import { useGameLoop, useAITurn } from '../../hooks/useGameLoop';
 import { PlayerHand } from './PlayerHand';
 import { PlayArea } from './PlayArea';
-import { Card } from './Card';
 import { ScoreBoard } from '../ui/ScoreBoard';
 import { BidDialog } from '../ui/BidDialog';
 import { SettingsDialog } from '../ui/SettingsDialog';
@@ -13,7 +12,6 @@ import { DiscardDialog } from '../ui/DiscardDialog';
 import { GoAloneDialog } from '../ui/GoAloneDialog';
 import { getValidCards } from '../../engine/gameRules';
 import { getAvailableSuitsForPicking } from '../../engine/bidding';
-import { TEAM_NAMES } from '../../utils/constants';
 import type { Card as CardType, Suit } from '../../engine/types';
 
 // Import AI strategies
@@ -321,7 +319,6 @@ export const GameBoard: React.FC = () => {
           onOrderUp={handleOrderUp}
           onPass={handlePass}
           onPickSuit={handlePickSuit}
-          onGoAlone={() => {}}
           availableSuits={getAvailableSuitsForPicking(game.bidding.turnedUpCard)}
           playerHand={humanPlayer.hand}
           dealerName={game.players[game.bidding.dealer].name}

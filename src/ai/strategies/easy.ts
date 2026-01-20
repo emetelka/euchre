@@ -15,10 +15,10 @@ import { getAvailableSuitsForPicking } from '../../engine/bidding';
  * 70% chance to pass
  */
 export function shouldOrderUpEasy(
-  hand: Card[],
-  turnedUpCard: Card,
-  position: Position,
-  dealer: Position
+  _hand: Card[],
+  _turnedUpCard: Card,
+  _position: Position,
+  _dealer: Position
 ): boolean {
   return Math.random() > 0.7;
 }
@@ -28,7 +28,7 @@ export function shouldOrderUpEasy(
  * Returns a random suit or null (70% pass rate, unless dealer)
  */
 export function pickSuitEasy(
-  hand: Card[],
+  _hand: Card[],
   bidding: BiddingState,
   position: Position
 ): Suit | null {
@@ -55,7 +55,7 @@ export function pickSuitEasy(
  * Decides whether to go alone (easy AI)
  * Never goes alone
  */
-export function shouldGoAloneEasy(hand: Card[], trump: Suit): boolean {
+export function shouldGoAloneEasy(_hand: Card[], _trump: Suit): boolean {
   return false;
 }
 

@@ -5,10 +5,7 @@ import type {
   PlayerState,
   Position,
   Card,
-  Suit,
-  Team,
   BidAction,
-  GamePhase,
   HandResult,
   GameResult,
 } from '../engine/types';
@@ -19,7 +16,6 @@ import {
   processBiddingPass,
   processOrderUp,
   processPickSuit,
-  processGoAlone,
 } from '../engine/bidding';
 import { calculateTrickWinner, sortHand } from '../engine/gameRules';
 import { calculateHandScore, addPoints, getWinningTeam, createHandResult } from '../engine/scoring';
@@ -336,7 +332,7 @@ export const useGameStore = create<GameStore>()(
       if (state.game.phase === 'HAND_COMPLETE') {
         // Calculate and add points
         if (state.game.hand) {
-          const { points, wasEuchre } = calculateHandScore(
+          const { points } = calculateHandScore(
             state.game.hand.tricksWon,
             state.game.hand.makingTeam!,
             state.game.hand.goingAlone

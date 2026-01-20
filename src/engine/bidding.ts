@@ -1,4 +1,4 @@
-import type { BiddingState, Position, Suit, Card, Team } from './types';
+import type { BiddingState, Position, Suit, Card } from './types';
 import { getNextPlayer, getTeam } from './types';
 
 /**

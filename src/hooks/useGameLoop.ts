@@ -11,9 +11,6 @@ import { AI_TURN_DELAYS } from '../utils/constants';
 export function useGameLoop() {
   const game = useGameStore((state) => state.game);
   const advancePhase = useGameStore((state) => state.advancePhase);
-  const gameSpeed = useSettingsStore((state) => state.gameSpeed);
-
-  const aiDelay = AI_TURN_DELAYS[gameSpeed];
 
   /**
    * Handles automatic phase advancement for certain phases

@@ -3,7 +3,6 @@ import {
   getAllGameResults,
   getRecentGameResults,
   getStatistics,
-  saveGameResult,
 } from '../db/repository';
 import type { GameResult } from '../engine/types';
 

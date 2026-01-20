@@ -7,7 +7,6 @@ import {
   isPartnerWinning,
   getHighestCard,
   getLowestCard,
-  groupCardsBySuit,
 } from '../evaluator';
 
 /**
@@ -91,7 +90,7 @@ export function selectCardMedium(
  * Selects which card to lead
  */
 function selectLeadCard(
-  hand: Card[],
+  _hand: Card[],
   validCards: Card[],
   trump: Suit,
   currentPosition: Position,
