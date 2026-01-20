@@ -22,8 +22,13 @@ export const HandWinnerNotice: React.FC<HandWinnerNoticeProps> = ({
   const points = pointsScored[winningTeam];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8 max-w-md w-full mx-4 my-4">
+    <>
+      {/* Background overlay */}
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50" />
+
+      {/* Dialog - absolutely centered */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md px-4">
+        <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 text-center">
           Hand Complete!
         </h2>
@@ -76,7 +81,8 @@ export const HandWinnerNotice: React.FC<HandWinnerNoticeProps> = ({
         >
           Continue
         </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
