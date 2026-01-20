@@ -42,7 +42,13 @@ export function useGameLoop() {
       return () => clearTimeout(timer);
     }
 
-    // HAND_COMPLETE now requires user to click Continue button - no auto-advance
+    // Auto-advance from HAND_COMPLETE after showing the score
+    if (game.phase === 'HAND_COMPLETE') {
+      const timer = setTimeout(() => {
+        advancePhase();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
 
     // Auto-advance from TRUMP_SELECTED if human player called trump
     if (game.phase === 'TRUMP_SELECTED' && game.hand && game.hand.maker === 0) {

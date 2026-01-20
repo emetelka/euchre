@@ -11,10 +11,8 @@ import { TrumpNotice } from '../ui/TrumpNotice';
 import { DiscardDialog } from '../ui/DiscardDialog';
 import { GoAloneDialog } from '../ui/GoAloneDialog';
 import { TrickWinnerNotice } from '../ui/TrickWinnerNotice';
-import { HandWinnerNotice } from '../ui/HandWinnerNotice';
 import { getValidCards } from '../../engine/gameRules';
 import { getAvailableSuitsForPicking } from '../../engine/bidding';
-import { calculateHandScore } from '../../engine/scoring';
 import type { Card as CardType, Suit } from '../../engine/types';
 
 // Import AI strategies
@@ -410,25 +408,6 @@ export const GameBoard: React.FC = () => {
           playerName={game.players[game.hand.tricks[game.hand.tricks.length - 1].winner!].name}
         />
       )}
-
-      {/* Hand winner notice */}
-      {game.phase === 'HAND_COMPLETE' && game.hand && game.hand.makingTeam !== null && (() => {
-        const scoreResult = calculateHandScore(game.hand.tricksWon, game.hand.makingTeam, game.hand.goingAlone);
-        const winningTeam = scoreResult.points[0] > 0 ? 0 : 1;
-        return (
-          <HandWinnerNotice
-            winningTeam={winningTeam}
-            teamNames={[
-              `${game.players[0].name} & ${game.players[2].name}`,
-              `${game.players[1].name} & ${game.players[3].name}`,
-            ]}
-            pointsScored={scoreResult.points}
-            wasEuchre={scoreResult.wasEuchre}
-            tricksWon={game.hand.tricksWon}
-            onContinue={() => advancePhase()}
-          />
-        );
-      })()}
 
       {/* Game over dialog */}
       {game.phase === 'GAME_COMPLETE' && (
