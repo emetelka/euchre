@@ -220,14 +220,14 @@ export const GameBoard: React.FC = () => {
     game.bidding;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 gap-6">
+    <div className="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4 gap-3 sm:gap-6">
       {/* Header */}
       <div className="flex justify-between items-center w-full max-w-6xl">
-        <div className="text-white text-2xl font-bold">Euchre</div>
-        <div className="flex gap-3">
+        <div className="text-white text-xl sm:text-2xl font-bold">Euchre</div>
+        <div className="flex gap-2 sm:gap-3">
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-all"
+            className="px-3 py-2 sm:px-4 sm:py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm sm:text-base rounded-lg transition-all"
           >
             Settings
           </button>
@@ -236,7 +236,7 @@ export const GameBoard: React.FC = () => {
               resetGame();
               startNewGame(settings.playerNames, settings.playerAvatars, settings.difficulty);
             }}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all"
+            className="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base rounded-lg transition-all"
           >
             New Game
           </button>
@@ -244,9 +244,9 @@ export const GameBoard: React.FC = () => {
       </div>
 
       {/* Main game area */}
-      <div className="grid grid-cols-[200px_1fr_200px] gap-6 w-full max-w-6xl">
-        {/* Left sidebar - Score */}
-        <div>
+      <div className="flex flex-col md:grid md:grid-cols-[200px_1fr_200px] gap-3 md:gap-6 w-full max-w-6xl">
+        {/* Left sidebar - Score (top on mobile, left on desktop) */}
+        <div className="order-1 md:order-none">
           <ScoreBoard
             score={game.score}
             teamNames={[
@@ -259,18 +259,18 @@ export const GameBoard: React.FC = () => {
         </div>
 
         {/* Center - Game board */}
-        <div className="flex flex-col items-center justify-center gap-8">
+        <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 order-2 md:order-none">
           {/* North player */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-white font-medium">{game.players[2].name}</div>
+          <div className="flex flex-col items-center gap-1 sm:gap-2">
+            <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[2].name}</div>
             <PlayerHand cards={game.players[2].hand} position="north" faceDown />
           </div>
 
           {/* Center area with West, Play Area, and East */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2 sm:gap-4 md:gap-8">
             {/* West player */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="text-white font-medium">{game.players[1].name}</div>
+            <div className="flex flex-col items-center gap-1 sm:gap-2">
+              <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
               <PlayerHand cards={game.players[1].hand} position="west" faceDown />
             </div>
 
@@ -280,15 +280,15 @@ export const GameBoard: React.FC = () => {
             </div>
 
             {/* East player */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="text-white font-medium">{game.players[3].name}</div>
+            <div className="flex flex-col items-center gap-1 sm:gap-2">
+              <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[3].name}</div>
               <PlayerHand cards={game.players[3].hand} position="east" faceDown />
             </div>
           </div>
 
           {/* South player (human) */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-white font-medium">{game.players[0].name}</div>
+          <div className="flex flex-col items-center gap-1 sm:gap-2">
+            <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[0].name}</div>
             <PlayerHand
               cards={humanPlayer.hand}
               position="south"
@@ -298,19 +298,19 @@ export const GameBoard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right sidebar - Info */}
-        <div className="text-white">
-          <div className="bg-white bg-opacity-10 rounded-lg p-4">
-            <div className="text-sm mb-2">
+        {/* Right sidebar - Info (bottom on mobile, right on desktop) */}
+        <div className="text-white order-3 md:order-none">
+          <div className="bg-white bg-opacity-10 rounded-lg p-3 sm:p-4">
+            <div className="text-xs sm:text-sm mb-2">
               <div className="font-bold mb-1">Current Player:</div>
               <div>{game.players[game.currentPlayer].name}</div>
             </div>
-            <div className="text-sm">
+            <div className="text-xs sm:text-sm">
               <div className="font-bold mb-1">Phase:</div>
               <div className="capitalize">{game.phase.replace(/_/g, ' ')}</div>
             </div>
             {game.hand && (
-              <div className="text-sm mt-2">
+              <div className="text-xs sm:text-sm mt-2">
                 <div className="font-bold mb-1">Tricks Won:</div>
                 <div>{game.players[0].name} & {game.players[2].name}: {game.hand.tricksWon[0]}</div>
                 <div>{game.players[1].name} & {game.players[3].name}: {game.hand.tricksWon[1]}</div>
@@ -368,15 +368,15 @@ export const GameBoard: React.FC = () => {
 
       {/* Game over dialog */}
       {game.phase === 'GAME_COMPLETE' && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+          <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 sm:mb-4 text-center">
               Game Over!
             </h2>
-            <p className="text-xl text-center mb-6">
+            <p className="text-lg sm:text-xl text-center mb-4 sm:mb-6">
               {game.winningTeam === 0 ? 'You & North Win!' : 'West & East Win!'}
             </p>
-            <div className="text-center text-lg mb-6">
+            <div className="text-center text-base sm:text-lg mb-4 sm:mb-6">
               Final Score: {game.score[0]} - {game.score[1]}
             </div>
             <button

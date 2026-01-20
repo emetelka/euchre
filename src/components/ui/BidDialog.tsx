@@ -27,16 +27,16 @@ export const BidDialog: React.FC<BidDialogProps> = ({
   const isDealer = bidding.currentBidder === bidding.dealer;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white rounded-lg shadow-2xl p-4 sm:p-6 max-w-2xl w-full">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 text-center">
           {isRound1 ? 'Bidding - Round 1' : 'Bidding - Round 2'}
         </h2>
 
         {/* Show dealer info */}
         {dealerName && (
-          <div className="mb-4 text-center">
-            <p className="text-sm text-gray-600">
+          <div className="mb-3 sm:mb-4 text-center">
+            <p className="text-xs sm:text-sm text-gray-600">
               Dealer: <span className="font-bold text-blue-600">{dealerName}</span>
             </p>
           </div>
@@ -44,9 +44,9 @@ export const BidDialog: React.FC<BidDialogProps> = ({
 
         {/* Show player's hand during bidding */}
         {playerHand.length > 0 && (
-          <div className="mb-6">
-            <p className="text-sm text-gray-600 mb-2 text-center">Your hand:</p>
-            <div className="flex justify-center gap-2 flex-wrap">
+          <div className="mb-4 sm:mb-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2 text-center">Your hand:</p>
+            <div className="flex justify-center gap-1 sm:gap-2 flex-wrap">
               {playerHand.map((card) => (
                 <Card key={card.id} card={card} size="small" />
               ))}
@@ -55,16 +55,16 @@ export const BidDialog: React.FC<BidDialogProps> = ({
         )}
 
         {isRound1 && bidding.turnedUpCard && (
-          <div className="mb-6 text-center">
-            <p className="text-sm text-gray-600 mb-2">Turned-up card:</p>
+          <div className="mb-4 sm:mb-6 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2">Turned-up card:</p>
             <div className="flex justify-center items-center gap-2">
               <span
-                className="text-4xl"
+                className="text-3xl sm:text-4xl"
                 style={{ color: SUIT_COLORS[bidding.turnedUpCard.suit] }}
               >
                 {SUIT_SYMBOLS[bidding.turnedUpCard.suit]}
               </span>
-              <span className="text-2xl font-bold text-gray-800">
+              <span className="text-xl sm:text-2xl font-bold text-gray-800">
                 {bidding.turnedUpCard.rank}
               </span>
             </div>
@@ -72,26 +72,26 @@ export const BidDialog: React.FC<BidDialogProps> = ({
         )}
 
         {isRound2 && (
-          <div className="mb-6 text-center">
-            <p className="text-sm text-gray-600 mb-2">
+          <div className="mb-4 sm:mb-6 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2">
               Pick a suit{isDealer ? ' (dealer must pick)' : ''}:
             </p>
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center gap-2 sm:gap-3">
               {availableSuits.map((suit) => (
                 <button
                   key={suit}
                   onClick={() => onPickSuit(suit)}
-                  className="p-3 border-2 border-gray-300 rounded-lg hover:bg-gray-100 hover:border-gray-400 transition-all"
+                  className="p-2 sm:p-3 border-2 border-gray-300 rounded-lg hover:bg-gray-100 hover:border-gray-400 transition-all"
                   style={{ color: SUIT_COLORS[suit] }}
                 >
-                  <span className="text-4xl">{SUIT_SYMBOLS[suit]}</span>
+                  <span className="text-3xl sm:text-4xl">{SUIT_SYMBOLS[suit]}</span>
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {isRound1 && (
             <button
               onClick={onOrderUp}

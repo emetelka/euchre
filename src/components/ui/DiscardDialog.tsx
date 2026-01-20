@@ -15,28 +15,28 @@ export const DiscardDialog: React.FC<DiscardDialogProps> = ({
   onDiscard,
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-3xl w-full">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white rounded-lg shadow-2xl p-4 sm:p-6 max-w-3xl w-full">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 text-center">
           Discard a Card
         </h2>
 
-        <div className="mb-6 text-center">
-          <p className="text-lg text-gray-600 mb-2">
+        <div className="mb-4 sm:mb-6 text-center">
+          <p className="text-base sm:text-lg text-gray-600 mb-2">
             Trump is{' '}
             <span
-              className="font-bold text-2xl"
+              className="font-bold text-xl sm:text-2xl"
               style={{ color: SUIT_COLORS[trump] }}
             >
               {SUIT_SYMBOLS[trump]} {trump}
             </span>
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs sm:text-sm text-gray-500">
             You picked up the turned-up card. Select a card to discard:
           </p>
         </div>
 
-        <div className="flex justify-center gap-3 flex-wrap mb-6">
+        <div className="flex justify-center gap-1.5 sm:gap-2 md:gap-3 flex-wrap mb-4 sm:mb-6">
           {hand.map((card) => (
             <button
               key={card.id}
@@ -48,7 +48,7 @@ export const DiscardDialog: React.FC<DiscardDialogProps> = ({
           ))}
         </div>
 
-        <p className="text-center text-sm text-gray-500 italic">
+        <p className="text-center text-xs sm:text-sm text-gray-500 italic">
           Click on a card to discard it
         </p>
       </div>

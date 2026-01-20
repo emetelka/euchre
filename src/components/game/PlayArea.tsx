@@ -21,9 +21,9 @@ export const PlayArea: React.FC<PlayAreaProps> = ({ cardsPlayed }) => {
   };
 
   return (
-    <div className="relative w-64 h-64 bg-green-800 rounded-xl shadow-inner flex items-center justify-center">
+    <div className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 bg-green-800 rounded-xl shadow-inner flex items-center justify-center">
       {cardsPlayed.length === 0 ? (
-        <div className="text-green-600 text-sm">Trick Area</div>
+        <div className="text-green-600 text-xs sm:text-sm">Trick Area</div>
       ) : (
         <>
           {cardsPlayed.map((play) => (
