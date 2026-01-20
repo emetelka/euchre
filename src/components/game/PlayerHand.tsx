@@ -8,6 +8,7 @@ interface PlayerHandProps {
   validCards?: CardType[];
   position: 'south' | 'north' | 'east' | 'west';
   faceDown?: boolean;
+  showCountOnly?: boolean;
 }
 
 export const PlayerHand: React.FC<PlayerHandProps> = ({
@@ -16,6 +17,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   validCards = [],
   position,
   faceDown = false,
+  showCountOnly = false,
 }) => {
   const isCardValid = (card: CardType) => {
     if (!validCards || validCards.length === 0) return true;
@@ -34,6 +36,16 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
         return 'flex flex-col gap-1 sm:gap-2 items-center';
     }
   };
+
+  // Show compact card count for side players
+  if (showCountOnly) {
+    return (
+      <div className="bg-gradient-to-br from-blue-800 to-blue-950 border-2 border-blue-900 rounded-lg shadow-lg px-3 py-2 sm:px-4 sm:py-3">
+        <div className="text-blue-200 text-xs sm:text-sm font-medium">Cards</div>
+        <div className="text-white text-2xl sm:text-3xl font-bold">{cards.length}</div>
+      </div>
+    );
+  }
 
   return (
     <div className={getHandClasses()}>

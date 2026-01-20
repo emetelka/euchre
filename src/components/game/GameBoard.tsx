@@ -271,7 +271,7 @@ export const GameBoard: React.FC = () => {
             {/* West player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
-              <PlayerHand cards={game.players[1].hand} position="west" faceDown />
+              <PlayerHand cards={game.players[1].hand} position="west" faceDown showCountOnly />
             </div>
 
             {/* Play area */}
@@ -287,7 +287,7 @@ export const GameBoard: React.FC = () => {
             {/* East player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[3].name}</div>
-              <PlayerHand cards={game.players[3].hand} position="east" faceDown />
+              <PlayerHand cards={game.players[3].hand} position="east" faceDown showCountOnly />
             </div>
           </div>
 
@@ -310,6 +310,12 @@ export const GameBoard: React.FC = () => {
               <div className="font-bold mb-1">Current Player:</div>
               <div>{game.players[game.currentPlayer].name}</div>
             </div>
+            {game.hand && game.hand.trump && (
+              <div className="text-xs sm:text-sm mb-2">
+                <div className="font-bold mb-1">Trump:</div>
+                <div className="capitalize">{game.hand.trump}</div>
+              </div>
+            )}
             <div className="text-xs sm:text-sm">
               <div className="font-bold mb-1">Phase:</div>
               <div className="capitalize">{game.phase.replace(/_/g, ' ')}</div>
