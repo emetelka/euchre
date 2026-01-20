@@ -305,7 +305,7 @@ export const GameBoard: React.FC = () => {
 
         {/* Right sidebar - Info (bottom on mobile, right on desktop) */}
         <div className="text-white order-3 md:order-none">
-          <div className="bg-white bg-opacity-10 rounded-lg p-3 sm:p-4">
+          <div className="bg-white bg-opacity-10 rounded-lg p-3 sm:p-4 min-h-[200px] sm:min-h-[220px]">
             <div className="text-xs sm:text-sm mb-2">
               <div className="font-bold mb-1">Current Player:</div>
               <div>{game.players[game.currentPlayer].name}</div>
