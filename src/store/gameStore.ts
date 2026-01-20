@@ -232,6 +232,8 @@ export const useGameStore = create<GameStore>()(
           if (state.game.hand) {
             state.game.hand.goingAlone = true;
             state.game.hand.alonePlayer = state.game.bidding.maker;
+            const partnerPosition = ((state.game.bidding.maker + 2) % 4) as Position;
+            console.log(`[Go Alone] Player ${state.game.bidding.maker} (${state.game.players[state.game.bidding.maker].name}) going alone! Partner ${partnerPosition} (${state.game.players[partnerPosition].name}) will sit out.`);
           }
         }
 
@@ -281,6 +283,10 @@ export const useGameStore = create<GameStore>()(
         const expectedCards = state.game.hand.goingAlone ? 3 : 4;
         const trickComplete = state.game.hand.currentTrick.cardsPlayed.length === expectedCards;
 
+        if (state.game.hand.goingAlone) {
+          console.log(`[Go Alone] Cards played: ${state.game.hand.currentTrick.cardsPlayed.length}/${expectedCards}, Trick complete: ${trickComplete}`);
+        }
+
         if (trickComplete) {
           // Determine winner
           const winner = calculateTrickWinner(
@@ -308,6 +314,7 @@ export const useGameStore = create<GameStore>()(
           if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
             const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
             if (nextPlayer === partnerPosition) {
+              console.log(`[Go Alone] Skipping partner at position ${partnerPosition} (${state.game.players[partnerPosition].name})`);
               nextPlayer = getNextPlayer(nextPlayer);
             }
           }
@@ -332,11 +339,15 @@ export const useGameStore = create<GameStore>()(
       if (state.game.phase === 'HAND_COMPLETE') {
         // Calculate and add points
         if (state.game.hand) {
-          const { points } = calculateHandScore(
+          const { points, wasEuchre } = calculateHandScore(
             state.game.hand.tricksWon,
             state.game.hand.makingTeam!,
             state.game.hand.goingAlone
           );
+
+          if (state.game.hand.goingAlone) {
+            console.log(`[Go Alone] Hand complete - Tricks: ${state.game.hand.tricksWon}, Points: ${points}, Euchred: ${wasEuchre}`);
+          }
 
           set((state) => {
             if (!state.game || !state.game.hand) return;
@@ -418,6 +429,22 @@ export const useGameStore = create<GameStore>()(
           } else {
             // Advance from TRUMP_SELECTED to PLAYING
             state.game.phase = 'PLAYING';
+
+            // Set current player to lead player, skipping partner if going alone
+            if (state.game.hand) {
+              let leadPlayer = state.game.hand.currentTrick.leadPlayer;
+
+              // Skip partner if going alone
+              if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
+                const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
+                if (leadPlayer === partnerPosition) {
+                  console.log(`[Go Alone] Initial lead player ${leadPlayer} is partner - skipping to ${getNextPlayer(leadPlayer)}`);
+                  leadPlayer = getNextPlayer(leadPlayer);
+                }
+              }
+
+              state.game.currentPlayer = leadPlayer;
+            }
           }
         } else if (state.game.phase === 'TRICK_COMPLETE') {
           // Check if hand is complete (5 tricks played)
