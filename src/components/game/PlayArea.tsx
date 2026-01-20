@@ -1,7 +1,10 @@
 import React from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { Card } from './Card';
 import type { Position, Card as CardType, Suit } from '../../engine/types';
 import { SUIT_SYMBOLS, SUIT_COLORS } from '../../utils/constants';
+import { useSettingsStore } from '../../store/settingsStore';
+import { getAnimationDuration, springTransition } from '../../utils/animations';
 
 interface PlayAreaProps {
   cardsPlayed: { position: Position; card: CardType }[];
@@ -9,6 +12,8 @@ interface PlayAreaProps {
 }
 
 export const PlayArea: React.FC<PlayAreaProps> = ({ cardsPlayed, trump }) => {
+  const gameSpeed = useSettingsStore((state) => state.gameSpeed);
+
   const getCardPosition = (position: Position) => {
     switch (position) {
       case 0: // South
@@ -44,13 +49,21 @@ export const PlayArea: React.FC<PlayAreaProps> = ({ cardsPlayed, trump }) => {
           )}
         </div>
       ) : (
-        <>
+        <AnimatePresence mode="popLayout">
           {cardsPlayed.map((play) => (
-            <div key={play.position} className={getCardPosition(play.position)}>
-              <Card card={play.card} size="small" />
+            <div key={`${play.position}-${play.card.id}`} className={getCardPosition(play.position)}>
+              <Card
+                card={play.card}
+                size="small"
+                layoutId={`card-${play.card.id}`}
+                transition={{
+                  duration: getAnimationDuration(gameSpeed),
+                  ...springTransition,
+                }}
+              />
             </div>
           ))}
-        </>
+        </AnimatePresence>
       )}
     </div>
   );

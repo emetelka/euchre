@@ -1,6 +1,9 @@
 import React from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { Card } from './Card';
 import type { Card as CardType } from '../../engine/types';
+import { useSettingsStore } from '../../store/settingsStore';
+import { getAnimationDuration, springTransition } from '../../utils/animations';
 
 interface PlayerHandProps {
   cards: CardType[];
@@ -19,6 +22,8 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   faceDown = false,
   showCountOnly = false,
 }) => {
+  const gameSpeed = useSettingsStore((state) => state.gameSpeed);
+
   const isCardValid = (card: CardType) => {
     if (!validCards || validCards.length === 0) return true;
     return validCards.some((c) => c.id === card.id);
@@ -49,16 +54,24 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
 
   return (
     <div className={getHandClasses()}>
-      {cards.map((card) => (
-        <Card
-          key={card.id}
-          card={card}
-          onClick={onCardClick ? () => onCardClick(card) : undefined}
-          disabled={!isCardValid(card)}
-          faceDown={faceDown}
-          size={position === 'south' ? 'medium' : 'small'}
-        />
-      ))}
+      <AnimatePresence mode="popLayout">
+        {cards.map((card, index) => (
+          <Card
+            key={card.id}
+            card={card}
+            onClick={onCardClick ? () => onCardClick(card) : undefined}
+            disabled={!isCardValid(card)}
+            faceDown={faceDown}
+            size={position === 'south' ? 'medium' : 'small'}
+            layoutId={faceDown ? undefined : `card-${card.id}`}
+            transition={{
+              duration: getAnimationDuration(gameSpeed),
+              delay: index * 0.02,
+              ...springTransition,
+            }}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 };
