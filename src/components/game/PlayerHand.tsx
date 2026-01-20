@@ -69,6 +69,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
               delay: index * 0.02,
               ...springTransition,
             }}
+            showDisabledStyling={position === 'south' && !faceDown}
           />
         ))}
       </AnimatePresence>

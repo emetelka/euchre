@@ -13,6 +13,7 @@ interface CardProps {
   className?: string;
   layoutId?: string;
   transition?: Transition;
+  showDisabledStyling?: boolean; // Only show grey styling for disabled cards in player's hand
 }
 
 const CardComponent: React.FC<CardProps> = ({
@@ -24,6 +25,7 @@ const CardComponent: React.FC<CardProps> = ({
   className = '',
   layoutId,
   transition,
+  showDisabledStyling = false,
 }) => {
   const sizeClasses = {
     small: 'w-10 h-14 sm:w-12 sm:h-16 md:w-14 md:h-20',
@@ -77,12 +79,12 @@ const CardComponent: React.FC<CardProps> = ({
       transition={transition}
       onClick={handleClick}
       className={`${sizeClasses[size]} ${className} border-2 rounded-lg shadow-lg flex flex-col items-center justify-center gap-1 ${
-        !disabled && onClick
-          ? 'bg-white cursor-pointer hover:scale-105 hover:shadow-xl border-gray-300'
-          : 'bg-gray-300 cursor-not-allowed border-gray-400 opacity-60'
+        disabled && showDisabledStyling
+          ? 'bg-gray-300 cursor-not-allowed border-gray-400 opacity-60'
+          : 'bg-white cursor-pointer hover:scale-105 hover:shadow-xl border-gray-300'
       }`}
       style={{
-        color: disabled ? '#6b7280' : suitColor,
+        color: disabled && showDisabledStyling ? '#6b7280' : suitColor,
       }}
       whileHover={!disabled && onClick ? { scale: 1.05 } : undefined}
     >
