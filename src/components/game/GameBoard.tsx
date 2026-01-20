@@ -10,8 +10,11 @@ import { SettingsDialog } from '../ui/SettingsDialog';
 import { TrumpNotice } from '../ui/TrumpNotice';
 import { DiscardDialog } from '../ui/DiscardDialog';
 import { GoAloneDialog } from '../ui/GoAloneDialog';
+import { TrickWinnerNotice } from '../ui/TrickWinnerNotice';
+import { HandWinnerNotice } from '../ui/HandWinnerNotice';
 import { getValidCards } from '../../engine/gameRules';
 import { getAvailableSuitsForPicking } from '../../engine/bidding';
+import { calculateHandScore } from '../../engine/scoring';
 import type { Card as CardType, Suit } from '../../engine/types';
 
 // Import AI strategies
@@ -262,7 +265,12 @@ export const GameBoard: React.FC = () => {
         <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 order-2 md:order-none">
           {/* North player */}
           <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[70px] sm:min-h-[88px] md:min-h-[100px]">
-            <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[2].name}</div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[2].name}</div>
+              {game.hand && game.hand.dealer === 2 && (
+                <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+              )}
+            </div>
             <PlayerHand cards={game.players[2].hand} position="north" faceDown />
           </div>
 
@@ -270,7 +278,12 @@ export const GameBoard: React.FC = () => {
           <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-8 min-h-[140px] sm:min-h-[180px] md:min-h-[220px]">
             {/* West player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
+                {game.hand && game.hand.dealer === 1 && (
+                  <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+                )}
+              </div>
               <PlayerHand cards={game.players[1].hand} position="west" faceDown showCountOnly />
             </div>
 
@@ -286,14 +299,24 @@ export const GameBoard: React.FC = () => {
 
             {/* East player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[3].name}</div>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[3].name}</div>
+                {game.hand && game.hand.dealer === 3 && (
+                  <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+                )}
+              </div>
               <PlayerHand cards={game.players[3].hand} position="east" faceDown showCountOnly />
             </div>
           </div>
 
           {/* South player (human) */}
           <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[90px] sm:min-h-[112px] md:min-h-[132px]">
-            <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[0].name}</div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[0].name}</div>
+              {game.hand && game.hand.dealer === 0 && (
+                <span className="bg-yellow-500 text-black font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded">D</span>
+              )}
+            </div>
             <PlayerHand
               cards={humanPlayer.hand}
               position="south"
@@ -381,6 +404,33 @@ export const GameBoard: React.FC = () => {
           }}
         />
       )}
+
+      {/* Trick winner notice */}
+      {game.phase === 'TRICK_COMPLETE' && game.hand && game.hand.tricks.length > 0 && (
+        <TrickWinnerNotice
+          winner={game.hand.tricks[game.hand.tricks.length - 1].winner!}
+          playerName={game.players[game.hand.tricks[game.hand.tricks.length - 1].winner!].name}
+        />
+      )}
+
+      {/* Hand winner notice */}
+      {game.phase === 'HAND_COMPLETE' && game.hand && game.hand.makingTeam !== null && (() => {
+        const scoreResult = calculateHandScore(game.hand.tricksWon, game.hand.makingTeam, game.hand.goingAlone);
+        const winningTeam = scoreResult.points[0] > 0 ? 0 : 1;
+        return (
+          <HandWinnerNotice
+            winningTeam={winningTeam}
+            teamNames={[
+              `${game.players[0].name} & ${game.players[2].name}`,
+              `${game.players[1].name} & ${game.players[3].name}`,
+            ]}
+            pointsScored={scoreResult.points}
+            wasEuchre={scoreResult.wasEuchre}
+            tricksWon={game.hand.tricksWon}
+            onContinue={() => advancePhase()}
+          />
+        );
+      })()}
 
       {/* Game over dialog */}
       {game.phase === 'GAME_COMPLETE' && (
