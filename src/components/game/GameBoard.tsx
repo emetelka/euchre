@@ -51,7 +51,6 @@ export const GameBoard: React.FC = () => {
     if (game.hand && game.hand.goingAlone && game.hand.alonePlayer !== null) {
       const partnerPosition = (game.hand.alonePlayer + 2) % 4;
       if (currentPlayer.position === partnerPosition) {
-        console.log(`[Go Alone] AI turn skipped - partner at position ${partnerPosition} is sitting out`);
         return;
       }
     }
@@ -201,18 +200,14 @@ export const GameBoard: React.FC = () => {
   };
 
   const handleGoAlone = () => {
-    console.log('[handleGoAlone] Button clicked - calling processBid with go_alone');
     processBid({ type: 'go_alone' });
-    console.log('[handleGoAlone] processBid called, waiting 100ms before advancePhase');
     // Delay to ensure state updates are applied before advancing
     setTimeout(() => {
-      console.log('[handleGoAlone] Calling advancePhase');
       advancePhase();
     }, 100);
   };
 
   const handleDeclineAlone = () => {
-    console.log('[handleDeclineAlone] Button clicked');
     // Move to TRUMP_SELECTED without going alone
     setTimeout(() => {
       advancePhase();

@@ -159,7 +159,6 @@ export const useGameStore = create<GameStore>()(
 
     processBid: (action: BidAction) =>
       set((state) => {
-        console.log(`[processBid] Action received: ${action.type}`);
         if (!state.game || !state.game.bidding) return;
 
         const bidding = state.game.bidding;
@@ -174,10 +173,7 @@ export const useGameStore = create<GameStore>()(
 
           state.game.currentPlayer = state.game.bidding.currentBidder;
         } else if (action.type === 'order_up') {
-          console.log('[processBid] order_up - currentBidder before:', bidding.currentBidder);
           state.game.bidding = processOrderUp(bidding);
-          console.log('[processBid] order_up - maker after:', state.game.bidding.maker);
-          console.log('[processBid] order_up - trump after:', state.game.bidding.trump);
 
           // Dealer picks up the turned-up card
           if (state.game.hand) {
@@ -228,33 +224,19 @@ export const useGameStore = create<GameStore>()(
           state.game.phase = 'GO_ALONE_DECISION';
           state.game.currentPlayer = state.game.bidding.maker!;
         } else if (action.type === 'go_alone') {
-          console.log('[processBid] go_alone branch entered');
-          console.log('[processBid] go_alone - current phase:', state.game.phase);
-          console.log('[processBid] go_alone - bidding state:', JSON.stringify({
-            maker: state.game.bidding.maker,
-            trump: state.game.bidding.trump,
-            currentBidder: state.game.bidding.currentBidder,
-            dealer: state.game.bidding.dealer
-          }));
           // Directly set goingAlone flags instead of calling processGoAlone
           // Trump and maker are already set when we reach GO_ALONE_DECISION phase
           if (state.game.bidding.maker === null || state.game.bidding.maker === undefined) {
-            console.error('[processBid] go_alone - maker is null! Returning early.');
-            console.error('[processBid] go_alone - This means order_up or pick_suit did not set maker correctly');
+            console.error('[Go Alone Error] Maker is null when trying to go alone');
             return;
           }
 
-          console.log(`[processBid] Setting goingAlone flags - maker: ${state.game.bidding.maker}`);
           state.game.bidding.goingAlone = true;
           state.game.bidding.alonePlayer = state.game.bidding.maker;
 
           if (state.game.hand) {
             state.game.hand.goingAlone = true;
             state.game.hand.alonePlayer = state.game.bidding.maker;
-            const partnerPosition = ((state.game.bidding.maker + 2) % 4) as Position;
-            console.log(`[Go Alone] Player ${state.game.bidding.maker} (${state.game.players[state.game.bidding.maker].name}) going alone! Partner ${partnerPosition} (${state.game.players[partnerPosition].name}) will sit out.`);
-          } else {
-            console.error('[processBid] go_alone - state.game.hand is null!');
           }
         }
 
@@ -289,7 +271,6 @@ export const useGameStore = create<GameStore>()(
         if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
           const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
           if (leadPlayer === partnerPosition) {
-            console.log(`[Go Alone] Lead player ${leadPlayer} is partner after discard - skipping to ${getNextPlayer(leadPlayer)}`);
             leadPlayer = getNextPlayer(leadPlayer);
           }
         }
@@ -302,15 +283,12 @@ export const useGameStore = create<GameStore>()(
         if (!state.game || !state.game.hand || state.game.phase !== 'PLAYING') return;
 
         const currentPlayer = state.game.currentPlayer;
-        console.log(`[playCard] Current player: ${currentPlayer} (${state.game.players[currentPlayer].name}), Card: ${card.rank} of ${card.suit}`);
-        console.log(`[playCard] Go alone state - goingAlone: ${state.game.hand.goingAlone}, alonePlayer: ${state.game.hand.alonePlayer}`);
 
         // Prevent partner from playing when going alone
         if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
           const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
-          console.log(`[playCard] Go alone check - alone player: ${state.game.hand.alonePlayer}, partner: ${partnerPosition}, current: ${currentPlayer}`);
           if (currentPlayer === partnerPosition) {
-            console.error(`[Go Alone] ERROR: Partner at position ${partnerPosition} (${state.game.players[partnerPosition].name}) tried to play ${card.rank} of ${card.suit}! Blocking this.`);
+            console.error('[Go Alone Error] Partner attempted to play when sitting out');
             return;
           }
         }
@@ -329,10 +307,6 @@ export const useGameStore = create<GameStore>()(
         // Check if trick is complete (4 cards played or 3 if going alone)
         const expectedCards = state.game.hand.goingAlone ? 3 : 4;
         const trickComplete = state.game.hand.currentTrick.cardsPlayed.length === expectedCards;
-
-        if (state.game.hand.goingAlone) {
-          console.log(`[Go Alone] Cards played: ${state.game.hand.currentTrick.cardsPlayed.length}/${expectedCards}, Trick complete: ${trickComplete}`);
-        }
 
         if (trickComplete) {
           // Determine winner
@@ -356,19 +330,15 @@ export const useGameStore = create<GameStore>()(
         } else {
           // Move to next player
           let nextPlayer = getNextPlayer(currentPlayer);
-          console.log(`[playCard] Moving to next player: ${currentPlayer} -> ${nextPlayer}`);
 
           // Skip partner if going alone
           if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
             const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
-            console.log(`[playCard] Checking if next player ${nextPlayer} is partner ${partnerPosition}`);
             if (nextPlayer === partnerPosition) {
-              console.log(`[Go Alone] Skipping partner at position ${partnerPosition} (${state.game.players[partnerPosition].name}) -> ${getNextPlayer(nextPlayer)}`);
               nextPlayer = getNextPlayer(nextPlayer);
             }
           }
 
-          console.log(`[playCard] Setting currentPlayer to ${nextPlayer} (${state.game.players[nextPlayer].name})`);
           state.game.currentPlayer = nextPlayer;
         }
       }),
@@ -389,15 +359,11 @@ export const useGameStore = create<GameStore>()(
       if (state.game.phase === 'HAND_COMPLETE') {
         // Calculate and add points
         if (state.game.hand) {
-          const { points, wasEuchre } = calculateHandScore(
+          const { points } = calculateHandScore(
             state.game.hand.tricksWon,
             state.game.hand.makingTeam!,
             state.game.hand.goingAlone
           );
-
-          if (state.game.hand.goingAlone) {
-            console.log(`[Go Alone] Hand complete - Tricks: ${state.game.hand.tricksWon}, Points: ${points}, Euchred: ${wasEuchre}`);
-          }
 
           set((state) => {
             if (!state.game || !state.game.hand) return;
@@ -478,7 +444,6 @@ export const useGameStore = create<GameStore>()(
             if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
               const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
               if (leadPlayer === partnerPosition) {
-                console.log(`[Go Alone] Lead player ${leadPlayer} is partner at GO_ALONE_DECISION - skipping to ${getNextPlayer(leadPlayer)}`);
                 leadPlayer = getNextPlayer(leadPlayer);
               }
             }
@@ -494,7 +459,6 @@ export const useGameStore = create<GameStore>()(
             if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
               const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
               if (dealer === partnerPosition) {
-                console.log(`[Go Alone] Dealer ${dealer} is partner sitting out - auto-discarding`);
                 // Auto-discard lowest card for partner
                 state.game.players[dealer].hand.pop();
                 state.game.hand.dealerNeedsDiscard = false;
@@ -526,7 +490,6 @@ export const useGameStore = create<GameStore>()(
               if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
                 const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
                 if (leadPlayer === partnerPosition) {
-                  console.log(`[Go Alone] Initial lead player ${leadPlayer} is partner - skipping to ${getNextPlayer(leadPlayer)}`);
                   leadPlayer = getNextPlayer(leadPlayer);
                 }
               }
@@ -546,7 +509,6 @@ export const useGameStore = create<GameStore>()(
             if (state.game.hand && state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
               const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
               if (winner === partnerPosition) {
-                console.log(`[Go Alone] Partner ${partnerPosition} won trick but is sitting out - next player ${getNextPlayer(winner)} leads instead`);
                 winner = getNextPlayer(winner) as Position;
               }
             }
