@@ -284,6 +284,7 @@ export const useGameStore = create<GameStore>()(
 
         const currentPlayer = state.game.currentPlayer;
         console.log(`[playCard] Current player: ${currentPlayer} (${state.game.players[currentPlayer].name}), Card: ${card.rank} of ${card.suit}`);
+        console.log(`[playCard] Go alone state - goingAlone: ${state.game.hand.goingAlone}, alonePlayer: ${state.game.hand.alonePlayer}`);
 
         // Prevent partner from playing when going alone
         if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
@@ -520,7 +521,17 @@ export const useGameStore = create<GameStore>()(
             state.game.phase = 'HAND_COMPLETE';
           } else {
             // Start new trick
-            const winner = state.game.hand!.currentTrick.winner!;
+            let winner = state.game.hand!.currentTrick.winner!;
+
+            // Skip partner if going alone and partner won the trick
+            if (state.game.hand && state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
+              const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
+              if (winner === partnerPosition) {
+                console.log(`[Go Alone] Partner ${partnerPosition} won trick but is sitting out - next player ${getNextPlayer(winner)} leads instead`);
+                winner = getNextPlayer(winner) as Position;
+              }
+            }
+
             state.game.hand!.currentTrick = {
               leadPlayer: winner,
               cardsPlayed: [],
