@@ -283,12 +283,14 @@ export const useGameStore = create<GameStore>()(
         if (!state.game || !state.game.hand || state.game.phase !== 'PLAYING') return;
 
         const currentPlayer = state.game.currentPlayer;
+        console.log(`[playCard] Current player: ${currentPlayer} (${state.game.players[currentPlayer].name}), Card: ${card.rank} of ${card.suit}`);
 
         // Prevent partner from playing when going alone
         if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
           const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
+          console.log(`[playCard] Go alone check - alone player: ${state.game.hand.alonePlayer}, partner: ${partnerPosition}, current: ${currentPlayer}`);
           if (currentPlayer === partnerPosition) {
-            console.error(`[Go Alone] ERROR: Partner at position ${partnerPosition} tried to play! This should never happen.`);
+            console.error(`[Go Alone] ERROR: Partner at position ${partnerPosition} (${state.game.players[partnerPosition].name}) tried to play ${card.rank} of ${card.suit}! Blocking this.`);
             return;
           }
         }
@@ -334,16 +336,19 @@ export const useGameStore = create<GameStore>()(
         } else {
           // Move to next player
           let nextPlayer = getNextPlayer(currentPlayer);
+          console.log(`[playCard] Moving to next player: ${currentPlayer} -> ${nextPlayer}`);
 
           // Skip partner if going alone
           if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
             const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
+            console.log(`[playCard] Checking if next player ${nextPlayer} is partner ${partnerPosition}`);
             if (nextPlayer === partnerPosition) {
-              console.log(`[Go Alone] Skipping partner at position ${partnerPosition} (${state.game.players[partnerPosition].name})`);
+              console.log(`[Go Alone] Skipping partner at position ${partnerPosition} (${state.game.players[partnerPosition].name}) -> ${getNextPlayer(nextPlayer)}`);
               nextPlayer = getNextPlayer(nextPlayer);
             }
           }
 
+          console.log(`[playCard] Setting currentPlayer to ${nextPlayer} (${state.game.players[nextPlayer].name})`);
           state.game.currentPlayer = nextPlayer;
         }
       }),
