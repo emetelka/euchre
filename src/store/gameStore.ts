@@ -238,7 +238,7 @@ export const useGameStore = create<GameStore>()(
           }));
           // Directly set goingAlone flags instead of calling processGoAlone
           // Trump and maker are already set when we reach GO_ALONE_DECISION phase
-          if (!state.game.bidding.maker) {
+          if (state.game.bidding.maker === null || state.game.bidding.maker === undefined) {
             console.error('[processBid] go_alone - maker is null! Returning early.');
             console.error('[processBid] go_alone - This means order_up or pick_suit did not set maker correctly');
             return;
