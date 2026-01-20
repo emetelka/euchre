@@ -49,7 +49,15 @@ export function useGameLoop() {
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [game?.phase, advancePhase]);
+
+    // Auto-advance from TRUMP_SELECTED if human player called trump
+    if (game.phase === 'TRUMP_SELECTED' && game.hand && game.hand.maker === 0) {
+      const timer = setTimeout(() => {
+        advancePhase();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [game?.phase, game?.hand?.maker, advancePhase]);
 
   return {
     game,

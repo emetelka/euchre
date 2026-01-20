@@ -364,8 +364,13 @@ export const GameBoard: React.FC = () => {
         />
       )}
 
-      {/* Trump selected notice */}
-      {game.phase === 'TRUMP_SELECTED' && game.hand && game.hand.trump && game.hand.maker !== null && game.bidding && (
+      {/* Trump selected notice - only show if human player didn't call trump */}
+      {game.phase === 'TRUMP_SELECTED' &&
+       game.hand &&
+       game.hand.trump &&
+       game.hand.maker !== null &&
+       game.hand.maker !== 0 &&
+       game.bidding && (
         <TrumpNotice
           trump={game.hand.trump}
           maker={game.bidding.maker !== null ? game.bidding.maker : game.hand.maker}

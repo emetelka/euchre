@@ -90,9 +90,9 @@ const CardComponent: React.FC<CardProps> = ({
       exit={{ opacity: 0, scale: 0.5 }}
       transition={shake ? { duration: 0.2 } : transition}
       onClick={handleClick}
-      className={`${sizeClasses[size]} ${className} bg-white border-2 border-gray-300 rounded-lg shadow-lg flex flex-col items-center justify-center gap-1 ${
-        !disabled && onClick ? 'cursor-pointer hover:scale-105 hover:shadow-xl' : 'cursor-default'
-      } ${disabled ? 'opacity-50' : ''}`}
+      className={`${sizeClasses[size]} ${className} bg-white border-2 rounded-lg shadow-lg flex flex-col items-center justify-center gap-1 ${
+        !disabled && onClick ? 'cursor-pointer hover:scale-105 hover:shadow-xl border-gray-300' : 'cursor-not-allowed border-gray-400'
+      } ${disabled ? 'opacity-30 grayscale' : ''}`}
       style={{
         color: suitColor,
       }}
