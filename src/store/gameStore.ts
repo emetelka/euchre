@@ -262,7 +262,20 @@ export const useGameStore = create<GameStore>()(
 
         // Advance to playing phase
         state.game.phase = 'PLAYING';
-        state.game.currentPlayer = state.game.hand.currentTrick.leadPlayer;
+
+        // Set current player to lead player, skipping partner if going alone
+        let leadPlayer = state.game.hand.currentTrick.leadPlayer;
+
+        // Skip partner if going alone
+        if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
+          const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
+          if (leadPlayer === partnerPosition) {
+            console.log(`[Go Alone] Lead player ${leadPlayer} is partner after discard - skipping to ${getNextPlayer(leadPlayer)}`);
+            leadPlayer = getNextPlayer(leadPlayer);
+          }
+        }
+
+        state.game.currentPlayer = leadPlayer;
       }),
 
     playCard: (card: Card) =>
@@ -421,7 +434,22 @@ export const useGameStore = create<GameStore>()(
         } else if (state.game.phase === 'GO_ALONE_DECISION') {
           // Advance from GO_ALONE_DECISION to TRUMP_SELECTED
           state.game.phase = 'TRUMP_SELECTED';
-          state.game.currentPlayer = state.game.hand!.currentTrick.leadPlayer;
+
+          // Set current player to lead player, skipping partner if going alone
+          if (state.game.hand) {
+            let leadPlayer = state.game.hand.currentTrick.leadPlayer;
+
+            // Skip partner if going alone
+            if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
+              const partnerPosition = ((state.game.hand.alonePlayer + 2) % 4) as Position;
+              if (leadPlayer === partnerPosition) {
+                console.log(`[Go Alone] Lead player ${leadPlayer} is partner at GO_ALONE_DECISION - skipping to ${getNextPlayer(leadPlayer)}`);
+                leadPlayer = getNextPlayer(leadPlayer);
+              }
+            }
+
+            state.game.currentPlayer = leadPlayer;
+          }
         } else if (state.game.phase === 'TRUMP_SELECTED') {
           // Check if dealer needs to discard
           if (state.game.hand && state.game.hand.dealerNeedsDiscard) {
