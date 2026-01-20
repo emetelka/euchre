@@ -226,6 +226,8 @@ export const useGameStore = create<GameStore>()(
         } else if (action.type === 'go_alone') {
           // Directly set goingAlone flags instead of calling processGoAlone
           // Trump and maker are already set when we reach GO_ALONE_DECISION phase
+          if (!state.game.bidding.maker) return;
+
           state.game.bidding.goingAlone = true;
           state.game.bidding.alonePlayer = state.game.bidding.maker;
 

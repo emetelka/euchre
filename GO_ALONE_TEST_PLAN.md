@@ -160,11 +160,16 @@ console.log('Current trick cards:', window.gameStore?.getState().game?.hand?.cur
 
 ## Automated Testing (Future)
 To add automated tests:
-1. Install vitest: `npm install -D vitest @vitest/ui`
+1. Install vitest: `npm install -D vitest @vitest/ui @types/jest`
 2. Add test script to package.json: `"test": "vitest"`
-3. Run the test file: `npm test goAlone.test.ts`
+3. Create test file at `src/engine/__tests__/goAlone.test.ts` to verify scoring:
+   - 4 points for alone march
+   - 1 point for 3-4 tricks going alone
+   - 2 points for euchre when going alone
+4. Add E2E tests with Playwright for UI flow
 
 ## Notes
-- The scoring tests in goAlone.test.ts verify the math is correct
-- Manual testing required for UI/UX and turn order
+- Unit tests for scoring logic would verify the math is correct
+- Manual testing required for UI/UX and turn order (see test cases above)
+- Console logs added to gameStore.ts for debugging go alone flow
 - Consider adding E2E tests with Playwright later
