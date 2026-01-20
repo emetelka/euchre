@@ -1,4 +1,4 @@
-import { Transition } from 'framer-motion';
+import type { Transition } from 'framer-motion';
 import type { GameSpeed } from '../engine/types';
 
 /**
@@ -9,6 +9,8 @@ export const getAnimationDuration = (gameSpeed: GameSpeed): number => {
     case 'slow': return 0.7;
     case 'medium': return 0.5;
     case 'fast': return 0.3;
+    case 'instant': return 0;
+    default: return 0.5;
   }
 };
 
