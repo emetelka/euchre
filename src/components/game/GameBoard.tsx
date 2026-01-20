@@ -47,6 +47,15 @@ export const GameBoard: React.FC = () => {
 
     if (!difficulty) return;
 
+    // Skip if this player is the partner sitting out during go alone
+    if (game.hand && game.hand.goingAlone && game.hand.alonePlayer !== null) {
+      const partnerPosition = (game.hand.alonePlayer + 2) % 4;
+      if (currentPlayer.position === partnerPosition) {
+        console.log(`[Go Alone] AI turn skipped - partner at position ${partnerPosition} is sitting out`);
+        return;
+      }
+    }
+
     // AI bidding
     if (game.phase === 'BIDDING_ROUND_1' && game.bidding) {
       const shouldOrder =

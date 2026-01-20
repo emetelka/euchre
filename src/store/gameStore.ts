@@ -283,6 +283,16 @@ export const useGameStore = create<GameStore>()(
         if (!state.game || !state.game.hand || state.game.phase !== 'PLAYING') return;
 
         const currentPlayer = state.game.currentPlayer;
+
+        // Prevent partner from playing when going alone
+        if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
+          const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
+          if (currentPlayer === partnerPosition) {
+            console.error(`[Go Alone] ERROR: Partner at position ${partnerPosition} tried to play! This should never happen.`);
+            return;
+          }
+        }
+
         const player = state.game.players[currentPlayer];
 
         // Remove card from player's hand
@@ -453,9 +463,32 @@ export const useGameStore = create<GameStore>()(
         } else if (state.game.phase === 'TRUMP_SELECTED') {
           // Check if dealer needs to discard
           if (state.game.hand && state.game.hand.dealerNeedsDiscard) {
-            // Go to dealer discard phase
+            const dealer = state.game.hand.dealer;
+
+            // If dealer is partner sitting out during go alone, auto-discard
+            if (state.game.hand.goingAlone && state.game.hand.alonePlayer !== null) {
+              const partnerPosition = (state.game.hand.alonePlayer + 2) % 4;
+              if (dealer === partnerPosition) {
+                console.log(`[Go Alone] Dealer ${dealer} is partner sitting out - auto-discarding`);
+                // Auto-discard lowest card for partner
+                state.game.players[dealer].hand.pop();
+                state.game.hand.dealerNeedsDiscard = false;
+                // Skip DEALER_DISCARD phase entirely
+                state.game.phase = 'PLAYING';
+
+                // Set current player to lead player, skipping partner
+                let leadPlayer = state.game.hand.currentTrick.leadPlayer;
+                if (leadPlayer === partnerPosition) {
+                  leadPlayer = getNextPlayer(leadPlayer);
+                }
+                state.game.currentPlayer = leadPlayer;
+                return;
+              }
+            }
+
+            // Normal dealer discard (dealer is not the partner sitting out)
             state.game.phase = 'DEALER_DISCARD';
-            state.game.currentPlayer = state.game.hand.dealer;
+            state.game.currentPlayer = dealer;
           } else {
             // Advance from TRUMP_SELECTED to PLAYING
             state.game.phase = 'PLAYING';
