@@ -261,13 +261,13 @@ export const GameBoard: React.FC = () => {
         {/* Center - Game board */}
         <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 order-2 md:order-none">
           {/* North player */}
-          <div className="flex flex-col items-center gap-1 sm:gap-2">
+          <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[70px] sm:min-h-[88px] md:min-h-[100px]">
             <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[2].name}</div>
             <PlayerHand cards={game.players[2].hand} position="north" faceDown />
           </div>
 
           {/* Center area with West, Play Area, and East */}
-          <div className="flex items-center gap-2 sm:gap-4 md:gap-8">
+          <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-8 min-h-[140px] sm:min-h-[180px] md:min-h-[220px]">
             {/* West player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
@@ -275,7 +275,7 @@ export const GameBoard: React.FC = () => {
             </div>
 
             {/* Play area */}
-            <div>
+            <div className="min-w-[120px] sm:min-w-[160px] md:min-w-[200px]">
               {game.hand && (
                 <PlayArea
                   cardsPlayed={game.hand.currentTrick.cardsPlayed}
@@ -292,7 +292,7 @@ export const GameBoard: React.FC = () => {
           </div>
 
           {/* South player (human) */}
-          <div className="flex flex-col items-center gap-1 sm:gap-2">
+          <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[90px] sm:min-h-[112px] md:min-h-[132px]">
             <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[0].name}</div>
             <PlayerHand
               cards={humanPlayer.hand}
