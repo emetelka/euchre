@@ -21,11 +21,8 @@ const sizeClasses = {
 export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 'md', className = '' }) => {
   const [error, setError] = useState(false);
 
-  // Resolve path based on whether it's a base64 data URL or preset filename
-  const resolvedSrc = src.startsWith('data:') ? src : `/avatars/${src}`;
-
-  // If image failed to load, show initials fallback
-  if (error) {
+  // If src is undefined or empty, show initials fallback
+  if (!src || error) {
     const initials = alt
       .split(' ')
       .map((word) => word[0])
@@ -41,6 +38,9 @@ export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 'md', className
       </div>
     );
   }
+
+  // Resolve path based on whether it's a base64 data URL or preset filename
+  const resolvedSrc = src.startsWith('data:') ? src : `/avatars/${src}`;
 
   return (
     <img

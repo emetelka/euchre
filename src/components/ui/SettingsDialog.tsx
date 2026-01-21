@@ -123,8 +123,11 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({ isOpen, onClose 
   };
 
   // Helper to get avatar src for display
-  const getAvatarSrc = (avatarData: AvatarData): string => {
-    return avatarData.type === 'preset' ? avatarData.value : avatarData.value;
+  const getAvatarSrc = (avatarData: AvatarData | undefined): string => {
+    if (!avatarData) {
+      return DEFAULT_PLAYER_AVATARS[0].value; // Fallback to default avatar
+    }
+    return avatarData.value;
   };
 
   return (
