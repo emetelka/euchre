@@ -26,9 +26,9 @@ export const HandWinnerNotice: React.FC<HandWinnerNoticeProps> = ({
       {/* Background overlay */}
       <div className="fixed inset-0 bg-black bg-opacity-50 z-50" />
 
-      {/* Dialog - absolutely centered */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md px-4">
-        <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8">
+      {/* Dialog - flexbox centered */}
+      <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+        <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8 w-full max-w-md">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 text-center">
           Hand Complete!
         </h2>
