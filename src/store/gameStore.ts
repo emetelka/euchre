@@ -34,6 +34,7 @@ interface GameStore {
     difficulty: string
   ) => void;
   updatePlayerNames: (playerNames: [string, string, string, string]) => void;
+  updatePlayerAvatars: (playerAvatars: [AvatarData, AvatarData, AvatarData, AvatarData]) => void;
   dealNewHand: () => void;
   processBid: (action: BidAction) => void;
   discardCard: (card: Card) => void;
@@ -113,6 +114,14 @@ export const useGameStore = create<GameStore>()(
         if (!state.game) return;
         state.game.players.forEach((player, index) => {
           player.name = playerNames[index];
+        });
+      }),
+
+    updatePlayerAvatars: (playerAvatars) =>
+      set((state) => {
+        if (!state.game) return;
+        state.game.players.forEach((player, index) => {
+          player.avatar = playerAvatars[index];
         });
       }),
 

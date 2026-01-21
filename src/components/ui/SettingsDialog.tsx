@@ -15,6 +15,7 @@ interface SettingsDialogProps {
 export const SettingsDialog: React.FC<SettingsDialogProps> = ({ isOpen, onClose }) => {
   const settings = useSettingsStore();
   const updatePlayerNames = useGameStore((state) => state.updatePlayerNames);
+  const updatePlayerAvatars = useGameStore((state) => state.updatePlayerAvatars);
   const [localNames, setLocalNames] = useState(settings.playerNames);
   const [localDifficulty, setLocalDifficulty] = useState(settings.difficulty);
   const [localSpeed, setLocalSpeed] = useState(settings.gameSpeed);
@@ -100,7 +101,18 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({ isOpen, onClose 
       }
 
       // Save to store
-      settings.setPlayerAvatar(cropPosition, { type: 'photo', value: base64 });
+      const newAvatarData = { type: 'photo', value: base64 } as const;
+      settings.setPlayerAvatar(cropPosition, newAvatarData);
+
+      // Update current game immediately with the new avatars
+      const updatedAvatars = [...settings.playerAvatars] as [
+        AvatarData,
+        AvatarData,
+        AvatarData,
+        AvatarData
+      ];
+      updatedAvatars[cropPosition] = newAvatarData;
+      updatePlayerAvatars(updatedAvatars);
 
       // Close modal
       setCropModalOpen(false);
@@ -182,7 +194,20 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({ isOpen, onClose 
                       {settings.playerAvatars[index].type === 'photo' && (
                         <button
                           type="button"
-                          onClick={() => settings.setPlayerAvatar(index, DEFAULT_PLAYER_AVATARS[index])}
+                          onClick={() => {
+                            const defaultAvatar = DEFAULT_PLAYER_AVATARS[index];
+                            settings.setPlayerAvatar(index, defaultAvatar);
+
+                            // Update current game immediately
+                            const updatedAvatars = [...settings.playerAvatars] as [
+                              AvatarData,
+                              AvatarData,
+                              AvatarData,
+                              AvatarData
+                            ];
+                            updatedAvatars[index] = defaultAvatar;
+                            updatePlayerAvatars(updatedAvatars);
+                          }}
                           className="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition-colors"
                         >
                           Reset to Default
