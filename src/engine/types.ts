@@ -20,6 +20,12 @@ export type Difficulty = 'easy' | 'medium' | 'hard';
 // Game speed settings
 export type GameSpeed = 'slow' | 'medium' | 'fast' | 'instant';
 
+// Avatar data - supports preset SVG avatars and base64 photo uploads
+export interface AvatarData {
+  type: 'preset' | 'photo';
+  value: string; // Filename for preset, base64 data URL for photo
+}
+
 // Bidding actions
 export type BidAction =
   | { type: 'order_up' } // Order up the turned-up card
@@ -81,7 +87,7 @@ export interface HandState {
 export interface PlayerState {
   position: Position;
   name: string;
-  avatar: string; // Filename of avatar image
+  avatar: string | AvatarData; // Filename of avatar image (legacy) or AvatarData
   hand: Card[];
   isHuman: boolean;
   difficulty: Difficulty | null; // null for human
@@ -121,7 +127,7 @@ export interface GameResult {
   id: string; // UUID
   timestamp: number;
   playerNames: [string, string, string, string];
-  playerAvatars: [string, string, string, string];
+  playerAvatars: [AvatarData, AvatarData, AvatarData, AvatarData];
   finalScore: [number, number];
   winningTeam: Team;
   difficulty: Difficulty;
@@ -133,7 +139,7 @@ export interface GameResult {
 // Settings stored in LocalStorage
 export interface Settings {
   playerNames: [string, string, string, string];
-  playerAvatars: [string, string, string, string];
+  playerAvatars: [AvatarData, AvatarData, AvatarData, AvatarData];
   difficulty: Difficulty;
   gameSpeed: GameSpeed;
 }

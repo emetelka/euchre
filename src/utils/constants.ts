@@ -1,4 +1,4 @@
-import type { Difficulty, GameSpeed } from '../engine/types';
+import type { Difficulty, GameSpeed, AvatarData } from '../engine/types';
 
 // Default player names
 export const DEFAULT_PLAYER_NAMES: [string, string, string, string] = [
@@ -9,11 +9,11 @@ export const DEFAULT_PLAYER_NAMES: [string, string, string, string] = [
 ];
 
 // Default player avatars
-export const DEFAULT_PLAYER_AVATARS: [string, string, string, string] = [
-  'avatar-human.svg',
-  'avatar-robot-1.svg',
-  'avatar-robot-2.svg',
-  'avatar-robot-3.svg',
+export const DEFAULT_PLAYER_AVATARS: [AvatarData, AvatarData, AvatarData, AvatarData] = [
+  { type: 'preset', value: 'avatar-human.svg' },
+  { type: 'preset', value: 'avatar-robot-1.svg' },
+  { type: 'preset', value: 'avatar-robot-2.svg' },
+  { type: 'preset', value: 'avatar-robot-3.svg' },
 ];
 
 // Default difficulty

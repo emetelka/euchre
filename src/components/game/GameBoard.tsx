@@ -12,10 +12,11 @@ import { DiscardDialog } from '../ui/DiscardDialog';
 import { GoAloneDialog } from '../ui/GoAloneDialog';
 import { TrickWinnerNotice } from '../ui/TrickWinnerNotice';
 import { HandWinnerNotice } from '../ui/HandWinnerNotice';
+import { Avatar } from '../ui/Avatar';
 import { getValidCards } from '../../engine/gameRules';
 import { getAvailableSuitsForPicking } from '../../engine/bidding';
 import { calculateHandScore } from '../../engine/scoring';
-import type { Card as CardType, Suit } from '../../engine/types';
+import type { Card as CardType, Suit, AvatarData } from '../../engine/types';
 
 // Import AI strategies
 import { shouldOrderUpEasy, pickSuitEasy, selectCardEasy } from '../../ai/strategies/easy';
@@ -217,6 +218,15 @@ export const GameBoard: React.FC = () => {
     }, 100);
   };
 
+  // Helper function to get avatar src
+  const getAvatarSrc = (avatarData: AvatarData | string): string => {
+    // Handle both new AvatarData format and legacy string format
+    if (typeof avatarData === 'string') {
+      return avatarData;
+    }
+    return avatarData.type === 'preset' ? avatarData.value : avatarData.value;
+  };
+
   const showBidDialog =
     (game.phase === 'BIDDING_ROUND_1' || game.phase === 'BIDDING_ROUND_2') &&
     game.currentPlayer === 0 &&
@@ -256,6 +266,7 @@ export const GameBoard: React.FC = () => {
               `${game.players[0].name} & ${game.players[2].name}`,
               `${game.players[1].name} & ${game.players[3].name}`,
             ]}
+            players={game.players}
             trump={game.hand?.trump || null}
           />
         </div>
@@ -264,6 +275,11 @@ export const GameBoard: React.FC = () => {
         <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 order-2 md:order-none">
           {/* North player */}
           <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[70px] sm:min-h-[88px] md:min-h-[100px]">
+            <Avatar
+              src={getAvatarSrc(game.players[2].avatar)}
+              alt={game.players[2].name}
+              size="md"
+            />
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[2].name}</div>
               {game.hand && game.hand.dealer === 2 && (
@@ -277,6 +293,11 @@ export const GameBoard: React.FC = () => {
           <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-8 min-h-[140px] sm:min-h-[180px] md:min-h-[220px]">
             {/* West player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
+              <Avatar
+                src={getAvatarSrc(game.players[1].avatar)}
+                alt={game.players[1].name}
+                size="md"
+              />
               <div className="flex items-center gap-1 sm:gap-2">
                 <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[1].name}</div>
                 {game.hand && game.hand.dealer === 1 && (
@@ -298,6 +319,11 @@ export const GameBoard: React.FC = () => {
 
             {/* East player */}
             <div className="flex flex-col items-center gap-1 sm:gap-2">
+              <Avatar
+                src={getAvatarSrc(game.players[3].avatar)}
+                alt={game.players[3].name}
+                size="md"
+              />
               <div className="flex items-center gap-1 sm:gap-2">
                 <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[3].name}</div>
                 {game.hand && game.hand.dealer === 3 && (
@@ -310,6 +336,11 @@ export const GameBoard: React.FC = () => {
 
           {/* South player (human) */}
           <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[90px] sm:min-h-[112px] md:min-h-[132px]">
+            <Avatar
+              src={getAvatarSrc(game.players[0].avatar)}
+              alt={game.players[0].name}
+              size="md"
+            />
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="text-white font-medium text-xs sm:text-sm md:text-base">{game.players[0].name}</div>
               {game.hand && game.hand.dealer === 0 && (

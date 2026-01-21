@@ -8,6 +8,7 @@ import type {
   BidAction,
   HandResult,
   GameResult,
+  AvatarData,
 } from '../engine/types';
 import { getTeam, getNextPlayer } from '../engine/types';
 import { createDeck, dealCards } from '../engine/deck';
@@ -29,7 +30,7 @@ interface GameStore {
   // Actions
   startNewGame: (
     playerNames: [string, string, string, string],
-    playerAvatars: [string, string, string, string],
+    playerAvatars: [AvatarData, AvatarData, AvatarData, AvatarData],
     difficulty: string
   ) => void;
   updatePlayerNames: (playerNames: [string, string, string, string]) => void;
@@ -43,7 +44,7 @@ interface GameStore {
 
 const createInitialPlayers = (
   names: [string, string, string, string],
-  avatars: [string, string, string, string],
+  avatars: [AvatarData, AvatarData, AvatarData, AvatarData],
   difficulty: string
 ): PlayerState[] => {
   return [
@@ -403,7 +404,13 @@ export const useGameStore = create<GameStore>()(
               id: `game-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
               timestamp: Date.now(),
               playerNames: state.game.players.map((p) => p.name) as [string, string, string, string],
-              playerAvatars: state.game.players.map((p) => p.avatar) as [string, string, string, string],
+              playerAvatars: state.game.players.map((p) => {
+                // Convert string to AvatarData if needed
+                if (typeof p.avatar === 'string') {
+                  return { type: 'preset', value: p.avatar } as AvatarData;
+                }
+                return p.avatar;
+              }) as [AvatarData, AvatarData, AvatarData, AvatarData],
               finalScore: state.game.score,
               winningTeam,
               difficulty: state.game.players[1].difficulty as any,
